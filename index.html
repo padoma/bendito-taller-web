@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bendito Taller | Corte Láser Creativo y Más</title>
+    
+    <!-- Google Fonts Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .features-section {
+            max-width: 1200px;
+            margin: 0 auto 60px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .insta-footer {
+            text-align: center;
+            background: #f5ece1;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+        .insta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #4b372d;
+            color: #fffcf8;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .insta-btn:hover {
+            transform: translateY(-2px);
+            background: #7d8b63;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="main-navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo-link">
+                <!-- Se puede usar el logo oficial en línea o un placeholder premium -->
+                <img src="https://padoma.github.io/bendito-taller-carrito/img/LOGO.png" alt="Bendito Taller" class="logo-img">
+            </a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item active"><a href="index.html">Inicio</a></li>
+                <li class="nav-item"><a href="catalogo.html">Catálogo</a></li>
+                <li class="nav-item"><a href="videos.html">Videos y Tutoriales</a></li>
+            </ul>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="nav-cart-btn" onclick="location.href='carrito.html'">
+                    🛒 Carrito <span id="cartCount">(0)</span>
+                </button>
+                
+                <button class="hamburger" id="menuToggle" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Diseños Propios y Originales en Corte Láser</h1>
+            <p class="hero-subtitle">
+                Creamos insumos de madera MDF creativos y de alta calidad para tus proyectos artísticos y manualidades. Diseñados especialmente para ti, listos para pintar y decorar.
+            </p>
+            <a href="catalogo.html" class="hero-btn">Ver Catálogo Completo ➜</a>
+        </div>
+    </header>
+
+    <!-- EXPLORA CATEGORIAS -->
+    <section class="container">
+        <h2 class="section-title">Explora Nuestras Categorías</h2>
+        
+        <div class="categories-grid">
+            <a href="catalogo.html?category=corazones" class="category-card">
+                <div class="category-icon">❤️</div>
+                <div class="category-name">Corazones</div>
+            </a>
+            <a href="catalogo.html?category=corazones-alados" class="category-card">
+                <div class="category-icon">👼</div>
+                <div class="category-name">Corazones Alados</div>
+            </a>
+            <a href="catalogo.html?category=nichos-y-altares" class="category-card">
+                <div class="category-icon">🏛️</div>
+                <div class="category-name">Nichos y Altares</div>
+            </a>
+            <a href="catalogo.html?category=mexicanos-y-calacas" class="category-card">
+                <div class="category-icon">💀</div>
+                <div class="category-name">Mexicanos y Calacas</div>
+            </a>
+            <a href="catalogo.html?category=grabados" class="category-card">
+                <div class="category-icon">✏️</div>
+                <div class="category-name">Grabados</div>
+            </a>
+            <a href="catalogo.html?category=letras" class="category-card">
+                <div class="category-icon">🔠</div>
+                <div class="category-name">Letras y Letreros</div>
+            </a>
+            <a href="catalogo.html?category=deco" class="category-card">
+                <div class="category-icon">🏡</div>
+                <div class="category-name">Deco e Infantil</div>
+            </a>
+            <a href="catalogo.html?category=navidad" class="category-card">
+                <div class="category-icon">🎄</div>
+                <div class="category-name">Navidad</div>
+            </a>
+            <a href="catalogo.html?category=stencil" class="category-card">
+                <div class="category-icon">🎨</div>
+                <div class="category-name">Stencils</div>
+            </a>
+            <a href="catalogo.html?category=mistico-y-mas" class="category-card">
+                <div class="category-icon">🕉️</div>
+                <div class="category-name">Místico y Más</div>
+            </a>
+            <a href="catalogo.html?category=aros" class="category-card">
+                <div class="category-icon">💎</div>
+                <div class="category-name">Aros</div>
+            </a>
+            <a href="catalogo.html?category=otros-insumos" class="category-card">
+                <div class="category-icon">📦</div>
+                <div class="category-name">Otros Insumos</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- CARACTERISTICAS CLAVE -->
+    <section class="features-section">
+        <div class="feature-card">
+            <div class="feature-icon">✨</div>
+            <h3 class="feature-title">Diseño 100% Original</h3>
+            <p class="feature-desc">Cada pieza es diseñada y manufacturada en nuestro taller propio con la máxima precisión láser.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🚛</div>
+            <h3 class="feature-title">Envíos a Todo Chile</h3>
+            <p class="feature-desc">Enviamos tu cotización por la empresa de transportes de tu preferencia rápidamente.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏷️</div>
+            <h3 class="feature-title">Ventas al Detalle y Mayor</h3>
+            <p class="feature-desc">Descuentos por mayor automáticos aplicados en el carrito de compras a partir de 4 unidades.</p>
+        </div>
+    </section>
+
+    <!-- FEATURED VIDEOS -->
+    <section style="background: rgba(229, 218, 203, 0.2); padding: 50px 0;">
+        <div class="container">
+            <h2 class="section-title" style="margin-top: 0;">Nuestros Diseños en Acción</h2>
+            <div class="videos-grid">
+                <!-- Video 1 -->
+                <div class="video-card">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/8gl6JiQ3Dws" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <h4 class="video-title">Pintado de Corazón Alado de Madera</h4>
+                    </div>
+                </div>
+                <!-- Video 2 -->
+                <div class="video-card">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/f9b9mxGQV_4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <h4 class="video-title">Ensamblado de Nicho para Altares</h4>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 10px;">
+                <a href="videos.html" class="hero-btn" style="background: var(--text-main);">Ver Más Videos y Tutoriales ➜</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTAGRAM FOOTER -->
+    <footer class="insta-footer">
+        <h3 style="margin: 0 0 10px 0;">¿Tienes dudas o quieres ver novedades diarias?</h3>
+        <p style="color: var(--text-muted); margin: 0 0 20px 0;">Síguenos en nuestro Instagram oficial y mantente informado.</p>
+        <a href="https://www.instagram.com/bendito_taller_/" target="_blank" class="insta-btn">
+            📸 Ir a @bendito_taller_
+        </a>
+        <div style="margin-top: 40px; font-size: 14px; color: var(--text-muted);">
+            © 2026 Bendito Taller. Creado con amor. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById("navMenu");
+            const toggle = document.getElementById("menuToggle");
+            menu.classList.toggle("show");
+            toggle.classList.toggle("active");
+        }
+
+        // Actualizar contador del carrito en el navbar
+        function updateCartBadge() {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+            document.getElementById("cartCount").textContent = `(${totalItems})`;
+        }
+
+        window.onload = updateCartBadge;
+    </script>
+</body>
+</html>
