@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos | Bendito Taller</title>
+    
+    <!-- Google Fonts Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="main-navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo-link">
+                <img src="https://padoma.github.io/bendito-taller-carrito/img/LOGO.png" alt="Bendito Taller" class="logo-img">
+            </a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="index.html">Inicio</a></li>
+                <li class="nav-item active"><a href="catalogo.html">Catálogo</a></li>
+                <li class="nav-item"><a href="videos.html">Videos y Tutoriales</a></li>
+            </ul>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="nav-cart-btn" onclick="toggleCart()">
+                    🛒 Carrito <span id="cartCount">(0)</span>
+                </button>
+                
+                <button class="hamburger" id="menuToggle" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CATALOG CONTAINER -->
+    <main class="catalog-container">
+        
+        <!-- SIDEBAR CATEGORIES -->
+        <aside class="catalog-sidebar">
+            <h3 class="sidebar-title">Categorías</h3>
+            <div class="category-list" id="categoryList">
+                <button class="category-btn active" onclick="setCategory('all')" id="btn-all">
+                    📋 Todas las categorías
+                </button>
+                <!-- Categorías dinámicas -->
+            </div>
+        </aside>
+
+        <!-- PRODUCTS GRID AND SEARCH -->
+        <section class="catalog-main">
+            <!-- Search bar -->
+            <div class="catalog-search-bar">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Buscar productos por nombre o código..."
+                    oninput="handleSearch()"
+                >
+            </div>
+
+            <!-- Products listing -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Productos dinámicos -->
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- PANEL CARRITO DRAWER (Lado derecho inferior) -->
+    <div id="cartPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 12px;">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Tu Pedido</h2>
+            <button onclick="toggleCart()" style="border: none; background: rgba(75, 55, 45, 0.05); font-size: 16px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main);">✕</button>
+        </div>
+
+        <div class="cart-items-list" id="cartItems">
+            <!-- Items del carrito -->
+        </div>
+
+        <div id="cartTotal">
+            <span>Total:</span>
+            <span>$0</span>
+        </div>
+
+        <button class="modal-btn-primary" onclick="location.href='carrito.html'" style="margin-top: 16px;">
+            📋 Revisar Pedido y Enviar Cotización
+        </button>
+
+        <button class="modal-btn-secondary" onclick="vaciarCarrito()" style="margin-top: 10px; background: var(--danger-gradient);">
+            🗑 Vaciar Carrito
+        </button>
+    </div>
+
+    <!-- TOAST AVISO -->
+    <div id="toast">
+        ✔ Agregado al pedido
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="productos.js"></script>
+    <script src="cart-shared.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
