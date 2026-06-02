@@ -89,7 +89,7 @@ body {
     background: rgba(125, 139, 99, 0.08);
 }
 
-.nav-cart-btn {
+.nav-cart-btn { user-select: none;
     border: none;
     background: var(--primary-gradient);
     color: white;
@@ -106,7 +106,7 @@ body {
     gap: 8px;
 }
 
-.nav-cart-btn:hover {
+.nav-cart-btn * { pointer-events: none; } .nav-cart-btn:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     filter: brightness(1.05);
@@ -189,32 +189,250 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
     padding: 0 24px 60px 24px;
 }
 
+/* 1. CONTENEDOR PRINCIPAL Y BORDE */
 .category-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    text-align: center;
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    border-radius: 20px;
+    overflow: hidden; /* Vital: corta la luz excedente */
+    padding: 3px; /* GROSOR DEL BORDE LUMINOSO (puedes cambiarlo) */
+    box-sizing: border-box;
     text-decoration: none;
-    color: var(--text-main);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s;
+    display: flex;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+    background-color: rgba(15, 23, 42, 0.3);
+}
+
+/* 2. EL RAYO DE LUZ GIRATORIO */
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250vmax;
+    height: 250vmax;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 270deg,
+        #41A1A1 360deg
+    );
+    transform-origin: center center;
+    animation: rotateBorder 3s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotateBorder {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 3. CONTENEDOR INTERNO (La tarjeta real) */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 17px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    background-color: #0f172a;
+}
+
+/* Marco interno decorativo en hover */
+.card-inner::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    border: 1.5px solid rgba(65, 161, 161, 0.85);
+    border-radius: 8px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.category-card:hover .card-inner::after {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-color);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(65, 161, 161, 0.4);
 }
 
-.category-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
+/* ---- IMAGEN Y SUPERPOSICIÓN OSCURA ---- */
+.card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://padoma.github.io/bendito-taller-carrito/img/grabados_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 1;
+}
+
+.category-card:hover .card-bg {
+    transform: scale(1.12);
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom, 
+        rgba(65, 161, 161, 0.75) 0%, 
+        rgba(20, 50, 50, 0.85) 100%
+    );
+    z-index: 2;
+    transition: background 0.5s ease, opacity 0.5s ease;
+}
+
+.category-card:hover .card-overlay {
+    opacity: 0.95;
+    background: linear-gradient(
+        to bottom, 
+        rgba(65, 161, 161, 0.55) 0%, 
+        rgba(20, 50, 50, 0.7) 100%
+    );
+}
+
+/* ---- TEXTOS Y ANIMACIONES ---- */
+.card-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    transform: translateY(15px);
+    opacity: 0;
+    transition: all 0.4s ease 0.1s;
+}
+
+.card-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffffff;
+    -webkit-text-stroke: 8px #ffffff;
+    text-shadow: 0 5px 10px rgba(0, 0, 0, 0.65);
+    margin: 0;
+    transition: all 0.4s ease;
+    position: relative;
+    display: inline-block;
+}
+
+.card-content h2::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #000000;
+    -webkit-text-stroke: 0px transparent;
+    text-shadow: none;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.divider {
+    width: 0px;
+    height: 2px;
+    background: #41A1A1;
+    margin: 12px 0;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
+    border-radius: 2px;
+}
+
+.explore {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.4s ease 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover .subtitle,
+.category-card:hover .explore {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.category-card:hover .divider {
+    width: 60px;
+}
+
+.category-card:hover .arrow {
+    transform: translateX(5px);
+}
+
+.category-card:hover h2 {
+    transform: translateY(-6px) scale(1.03);
+    text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- ETIQUETA DESTACADO ---- */
+.badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    z-index: 5;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .category-name {
@@ -607,10 +825,10 @@ body {
 /* ===== PANEL CARRITO DRAWER (SIDEBAR) ===== */
 #cartPanel {
     position: fixed;
-    bottom: 90px;
+    top: 80px;
     right: 24px;
     width: 380px;
-    max-height: 75vh;
+    max-height: calc(100vh - 100px);
     overflow-y: auto;
     background: var(--bg-panel);
     border-radius: var(--radius-lg);
@@ -718,6 +936,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
     .nav-menu {
         display: none;
         flex-direction: column;
@@ -746,6 +967,8 @@ body {
     #cartPanel {
         width: 92%;
         right: 4%;
-        bottom: 85px;
+        top: 70px;
     }
 }
+
+
