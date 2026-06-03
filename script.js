@@ -495,11 +495,18 @@ function cerrarPopup() {
 }
 
 let cartTimeout = null;
+let justOpenedByHover = false;
 
 function showCart() {
     clearTimeout(cartTimeout);
     const panel = document.getElementById("cartPanel");
-    if (panel) panel.style.display = "block";
+    if (panel && panel.style.display !== "block") {
+        panel.style.display = "block";
+        justOpenedByHover = true;
+        setTimeout(() => {
+            justOpenedByHover = false;
+        }, 300);
+    }
 }
 
 function hideCart() {
@@ -512,6 +519,10 @@ function hideCart() {
 function toggleCart() {
     const panel = document.getElementById("cartPanel");
     if (panel) {
+        if (justOpenedByHover) {
+            justOpenedByHover = false;
+            return;
+        }
         panel.style.display = panel.style.display === "block" ? "none" : "block";
     }
 }

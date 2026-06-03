@@ -352,7 +352,7 @@
         window.onload = updateCartBadge;
 
         // Intersection Observer para efecto hover automático al escrolear en celulares
-        document.addEventListener("DOMContentLoaded", () => {
+        function initMobileObserver() {
             if (window.innerWidth <= 768) {
                 const cards = document.querySelectorAll(".category-card");
                 
@@ -375,7 +375,13 @@
                 
                 cards.forEach(card => observer.observe(card));
             }
-        });
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initMobileObserver);
+        } else {
+            initMobileObserver();
+        }
     </script>
 </body>
 </html>
