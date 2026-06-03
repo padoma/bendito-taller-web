@@ -494,10 +494,26 @@ function cerrarPopup() {
     window.history.replaceState({}, document.title, url.pathname + url.search);
 }
 
-// Drawer carrito control
+let cartTimeout = null;
+
+function showCart() {
+    clearTimeout(cartTimeout);
+    const panel = document.getElementById("cartPanel");
+    if (panel) panel.style.display = "block";
+}
+
+function hideCart() {
+    cartTimeout = setTimeout(() => {
+        const panel = document.getElementById("cartPanel");
+        if (panel) panel.style.display = "none";
+    }, 300); // 300ms de retraso para dar tiempo a mover el cursor al panel
+}
+
 function toggleCart() {
     const panel = document.getElementById("cartPanel");
-    panel.style.display = panel.style.display === "block" ? "none" : "block";
+    if (panel) {
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+    }
 }
 
 function renderCarrito() {
