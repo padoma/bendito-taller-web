@@ -2009,4 +2009,67 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* ===== RESPONSIVE CARD SCALING & GENERAL MOBILE OPTIMIZATIONS ===== */
+@media (max-width: 480px) {
+    .category-card {
+        min-height: 200px;
+        padding: 0px;
+    }
+    
+    .card-bg {
+        width: 100%;
+        max-width: 416px;
+        height: auto;
+        aspect-ratio: 416 / 274;
+    }
+    
+    .card-corazones .card-bg {
+        width: 100%;
+        max-width: 416px;
+        height: auto;
+        aspect-ratio: 416 / 274;
+    }
+    
+    .card-content {
+        padding: 20px 10px;
+    }
+    
+    .card-content::before,
+    .card-content::after {
+        width: 95%;
+        max-width: 406px;
+        height: auto;
+        aspect-ratio: 406 / 264;
+    }
+    
+    .card-content h2 {
+        font-size: 26px !important;
+        -webkit-text-stroke: 1.8px #ffffff;
+    }
+    
+    .card-content .subtitle {
+        font-size: 11px !important;
+        margin-bottom: 2px;
+    }
+    
+    .divider {
+        margin: 6px 0;
+        width: 40px;
+    }
+
+    .carousel-caption p {
+        font-size: 12px;
+        margin-top: 4px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px 40px 16px;
+    }
+}
+
 
