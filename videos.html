@@ -26,13 +26,36 @@
     <!-- NAVBAR -->
     <nav class="main-navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo-link">
-                <img src="https://padoma.github.io/bendito-taller-carrito/img/LOGO.png" alt="Bendito Taller" class="logo-img">
-            </a>
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand-btn">
+                    Bendito Taller
+                </a>
+                
+                <!-- Dropdown Categorías -->
+                <div class="categories-dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">
+                        Categorías <span class="arrow-down">▼</span>
+                    </button>
+                    <div class="dropdown-content" id="categoriesDropdownContent">
+                        <!-- Categorías dinámicas cargadas por script.js -->
+                    </div>
+                </div>
+
+                <!-- Lupa / Buscador -->
+                <div class="search-bar-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar producto..." 
+                        oninput="handleNavbarSearch()"
+                        onkeydown="if(event.key === 'Enter') triggerSearch()"
+                    >
+                    <button class="search-btn" onclick="triggerSearch()" title="Buscar producto">🔍</button>
+                </div>
+            </div>
             
             <ul class="nav-menu" id="navMenu">
                 <li class="nav-item"><a href="index.html">Inicio</a></li>
-                <li class="nav-item"><a href="catalogo.html">Catálogo</a></li>
                 <li class="nav-item active"><a href="videos.html">Videos y Tutoriales</a></li>
             </ul>
 

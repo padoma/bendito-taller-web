@@ -8,7 +8,7 @@
     <!-- Google Fonts Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,13 +17,36 @@
     <!-- NAVBAR -->
     <nav class="main-navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo-link">
-                <img src="https://padoma.github.io/bendito-taller-carrito/img/LOGO.png" alt="Bendito Taller" class="logo-img">
-            </a>
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand-btn">
+                    Bendito Taller
+                </a>
+                
+                <!-- Dropdown Categorías -->
+                <div class="categories-dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">
+                        Categorías <span class="arrow-down">▼</span>
+                    </button>
+                    <div class="dropdown-content" id="categoriesDropdownContent">
+                        <!-- Categorías dinámicas cargadas por script.js -->
+                    </div>
+                </div>
+
+                <!-- Lupa / Buscador -->
+                <div class="search-bar-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar producto..." 
+                        oninput="handleNavbarSearch()"
+                        onkeydown="if(event.key === 'Enter') triggerSearch()"
+                    >
+                    <button class="search-btn" onclick="triggerSearch()" title="Buscar producto">🔍</button>
+                </div>
+            </div>
             
             <ul class="nav-menu" id="navMenu">
                 <li class="nav-item"><a href="index.html">Inicio</a></li>
-                <li class="nav-item active"><a href="catalogo.html">Catálogo</a></li>
                 <li class="nav-item"><a href="videos.html">Videos y Tutoriales</a></li>
             </ul>
 
@@ -42,45 +65,58 @@
         </div>
     </nav>
 
-    <!-- MAIN CATALOG CONTAINER -->
-    <main class="catalog-container">
+    <!-- SECCIÓN DE CATÁLOGO INTERACTIVO -->
+    <section id="catalog-section" class="container" style="scroll-margin-top: 80px; padding-top: 40px; padding-bottom: 60px;">
+        <h2 class="section-title">Nuestros Productos</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-top: -15px; margin-bottom: 45px; font-size: 15px;">
+            Selecciona una categoría o busca por código/nombre para ver el catálogo y cotizar por WhatsApp.
+        </p>
         
-        <!-- SIDEBAR CATEGORIES -->
-        <aside class="catalog-sidebar">
-            <h3 class="sidebar-title">Categorías</h3>
-            <div class="category-list" id="categoryList">
-                <button class="category-btn active" onclick="setCategory('all')" id="btn-all">
-                    📋 Todas las categorías
-                </button>
-                <!-- Categorías dinámicas -->
-            </div>
-        </aside>
+        <div class="catalog-container">
+            <!-- PRODUCTS GRID -->
+            <section class="catalog-main" style="width: 100%;">
+                <div class="products-grid" id="productsGrid">
+                    <!-- Productos dinámicos cargados por script.js -->
+                </div>
+            </section>
+        </div>
+    </section>
 
-        <!-- PRODUCTS GRID AND SEARCH -->
-        <section class="catalog-main">
-            <!-- Search bar -->
-            <div class="catalog-search-bar">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    class="search-input" 
-                    placeholder="Buscar productos por nombre o código..."
-                    oninput="handleSearch()"
-                >
-            </div>
+    <!-- CARACTERISTICAS CLAVE -->
+    <section class="features-section">
+        <div class="feature-card">
+            <div class="feature-icon">✨</div>
+            <h3 class="feature-title">Diseño 100% Original</h3>
+            <p class="feature-desc">Cada pieza es diseñada y manufacturada en nuestro taller propio con la máxima precisión láser.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🚛</div>
+            <h3 class="feature-title">Envíos a Todo Chile</h3>
+            <p class="feature-desc">Enviamos tu cotización por la empresa de transportes de tu preferencia rápidamente.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏷️</div>
+            <h3 class="feature-title">Ventas al Detalle y Mayor</h3>
+            <p class="feature-desc">Descuentos por mayor automáticos aplicados en el carrito de compras a partir de 4 unidades.</p>
+        </div>
+    </section>
 
-            <!-- Products listing -->
-            <div class="products-grid" id="productsGrid">
-                <!-- Productos dinámicos -->
-            </div>
-        </section>
-        
-    </main>
+    <!-- INSTAGRAM FOOTER -->
+    <footer class="insta-footer">
+        <h3 style="margin: 0 0 10px 0;">¿Tienes dudas o quieres ver novedades diarias?</h3>
+        <p style="color: var(--text-muted); margin: 0 0 20px 0;">Síguenos en nuestro Instagram oficial y mantente informado.</p>
+        <a href="https://www.instagram.com/bendito_taller_/" target="_blank" class="insta-btn">
+            📸 Ir a @bendito_taller_
+        </a>
+        <div style="margin-top: 40px; font-size: 14px; color: var(--text-muted);">
+            © 2026 Bendito Taller. Creado con amor. Todos los derechos reservados.
+        </div>
+    </footer>
 
     <!-- PANEL CARRITO DRAWER (Lado derecho inferior) -->
-    <div id="cartPanel" onmouseenter="showCart()" onmouseleave="hideCart()">
+    <div id="cartPanel" onmouseenter="showCart()" onmouseleave="hideCart()" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 12px;">
-            <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Tu Pedido</h2>
+            <h2 style="margin: 0; font-size: 20px; font-weight: 700; font-family: var(--font-serif);">Tu Pedido</h2>
             <button onclick="toggleCart()" style="border: none; background: rgba(75, 55, 45, 0.05); font-size: 16px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main);">✕</button>
         </div>
 
@@ -97,7 +133,7 @@
             📋 Revisar Pedido y Enviar Cotización
         </button>
 
-        <button class="modal-btn-secondary" onclick="vaciarCarrito()" style="margin-top: 10px; background: var(--danger-gradient);">
+        <button class="modal-btn-secondary" onclick="vaciarCarrito()" style="margin-top: 10px; background: var(--danger-gradient); color: white;">
             🗑 Vaciar Carrito
         </button>
     </div>
@@ -113,5 +149,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-

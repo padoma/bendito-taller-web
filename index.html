@@ -73,19 +73,41 @@
     <!-- NAVBAR -->
     <nav class="main-navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo-link">
-                <!-- Se puede usar el logo oficial en línea o un placeholder premium -->
-                <img src="https://padoma.github.io/bendito-taller-carrito/img/LOGO.png" alt="Bendito Taller" class="logo-img">
-            </a>
+            <div class="nav-left">
+                <a href="index.html" class="nav-brand-btn">
+                    Bendito Taller
+                </a>
+                
+                <!-- Dropdown Categorías -->
+                <div class="categories-dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown(event)">
+                        Categorías <span class="arrow-down">▼</span>
+                    </button>
+                    <div class="dropdown-content" id="categoriesDropdownContent">
+                        <!-- Categorías dinámicas cargadas por script.js -->
+                    </div>
+                </div>
+
+                <!-- Lupa / Buscador -->
+                <div class="search-bar-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar producto..." 
+                        oninput="handleNavbarSearch()"
+                        onkeydown="if(event.key === 'Enter') triggerSearch()"
+                    >
+                    <button class="search-btn" onclick="triggerSearch()" title="Buscar producto">🔍</button>
+                </div>
+            </div>
             
             <ul class="nav-menu" id="navMenu">
                 <li class="nav-item active"><a href="index.html">Inicio</a></li>
-                <li class="nav-item"><a href="catalogo.html">Catálogo</a></li>
                 <li class="nav-item"><a href="videos.html">Videos y Tutoriales</a></li>
             </ul>
 
             <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="nav-cart-btn" onclick="location.href='carrito.html'" style="pointer-events: auto;">
+                <button class="nav-cart-btn" onclick="toggleCart()" onmouseenter="showCart()" onmouseleave="hideCart()" style="pointer-events: auto;">
                     <span style="pointer-events: none;">🛒 Carrito </span>
                     <span id="cartCount" style="pointer-events: none;">(0)</span>
                 </button>
@@ -100,178 +122,214 @@
     </nav>
 
     <!-- HERO BANNER -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">Diseños Propios y Originales en Corte Láser</h1>
-            <p class="hero-subtitle">
-                Creamos insumos de madera MDF creativos y de alta calidad para tus proyectos artísticos y manualidades. Diseñados especialmente para ti, listos para pintar y decorar.
-            </p>
-            <a href="catalogo.html" class="hero-btn">Ver Catálogo Completo ➜</a>
-        </div>
+    <!--
+    <header class="hero-section" style="position: relative; display: flex; align-items: center; justify-content: center; background: transparent; padding: 0; border: none; overflow: hidden;">
+        <img src="img/logo_transparente.gif" alt="Bendito Taller" style="position: relative; z-index: 2; height: 1200px; max-height: 90vh; width: auto; max-width: 95%; mix-blend-mode: multiply; display: block; margin: -120px auto;">
+    </header>
+    -->
+    <header class="hero-section" style="position: relative; display: flex; align-items: center; justify-content: center; background: transparent; padding: 40px 0; border: none; overflow: hidden;">
+        <img src="img/logo_madera_sin_fondo.png" alt="Bendito Taller" style="position: relative; z-index: 2; height: 420px; max-height: 50vh; width: auto; max-width: 90%; display: block; margin: 0 auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));">
     </header>
 
+
+    <!-- BANNER DECORATIVO (ESTILO PREMIUM REFLEJADO) - HISTORIAL GUARDADO -->
+    <!--
+    <div class="decor-banner-container" style="margin-top: 0; max-width: 100%; padding: 0;">
+        <div class="decor-banner-custom" style="border-radius: 0; border-left: none; border-right: none;">
+            <div class="banner-branches left-branches">
+                <img src="img/rama1.png" alt="Rama Izquierda 1" class="branch-img branch-single">
+                <img src="img/rama31.png" alt="Rama Izquierda 2" class="branch-img branch-second">
+            </div>
+
+            <div class="decor-banner-content">
+                <h3 class="decor-banner-title">Insumos en corte láser para tus proyectos y manualidades.</h3>
+                <p class="decor-banner-text">Diseños propios y originales, creados por nosotros, especialmente para ti.</p>
+            </div>
+
+            <div class="banner-branches right-branches">
+                <img src="img/rama1.png" alt="Rama Derecha 1" class="branch-img branch-single">
+                <img src="img/rama31.png" alt="Rama Derecha 2" class="branch-img branch-second">
+            </div>
+        </div>
+    </div>
+    -->
+
+    <!-- NUEVO BANNER DECORATIVO CON PUNTOS INTERACTIVOS -->
+    <div class="decor-banner-container" style="margin-top: 0; max-width: 100%; padding: 0;">
+        <div class="dots-banner-container">
+            <div class="dots-banner-content">
+                <h3 class="dots-banner-title">Insumos en corte láser para tus proyectos y manualidades.</h3>
+                <p class="dots-banner-text">Diseños propios y originales, creados por nosotros, especialmente para ti.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- EXPLORA CATEGORIAS -->
-    <section class="container">
+    <section id="catalog-section" class="container" style="padding-bottom: 60px;">
+
         <h2 class="section-title">Explora Nuestras Categorías</h2>
         
-        <div class="categories-grid">
-            <a href="catalogo.html?category=corazones" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Creados para ti</span>
-                        <h2 data-text="CORAZONES">CORAZONES</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
+        <!-- CARRUSEL DE PRODUCTOS DESTACADOS -->
+        <div class="carousel-container" onmouseenter="detenerAutoSlide()" onmouseleave="iniciarAutoSlide()">
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Poblado dinámicamente por script.js -->
+            </div>
             
-            <a href="catalogo.html?category=corazones-alados" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Alas de amor</span>
-                        <h2 data-text="ALADOS">ALADOS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=nichos-y-altares" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Especiales</span>
-                        <h2 data-text="NICHOS">NICHOS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=mexicanos-y-calacas" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Tradición</span>
-                        <h2 data-text="MEXICANOS">MEXICANOS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=grabados" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Personalizados</span>
-                        <h2 data-text="GRABADOS">GRABADOS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=letras" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Palabras</span>
-                        <h2 data-text="LETREROS">LETREROS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=deco" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Decoración</span>
-                        <h2 data-text="INFANTIL">INFANTIL</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=navidad" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Temporada</span>
-                        <h2 data-text="NAVIDAD">NAVIDAD</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=stencil" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Pintura</span>
-                        <h2 data-text="STENCILS">STENCILS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=mistico-y-mas" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Energía</span>
-                        <h2 data-text="MÍSTICO">MÍSTICO</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=aros" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Joyería</span>
-                        <h2 data-text="AROS">AROS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="catalogo.html?category=otros-insumos" class="category-card">
-                <div class="card-inner">
-                    <div class="card-bg"></div>
-                    <div class="card-overlay"></div>
-                    <div class="card-content">
-                        <span class="subtitle">Para crear</span>
-                        <h2 data-text="INSUMOS">INSUMOS</h2>
-                        <div class="divider"></div>
-                        <span class="explore">Explorar colección <span class="arrow">→</span></span>
-                    </div>
-                </div>
-            </a>
+            <!-- Botones de navegación -->
+            <button class="carousel-arrow prev" onclick="moveCarousel(-1)" title="Anterior">❮</button>
+            <button class="carousel-arrow next" onclick="moveCarousel(1)" title="Siguiente">❯</button>
+            
+            <!-- Indicadores -->
+            <div class="carousel-dots" id="carouselDots"></div>
         </div>
+
+        <div class="categories-grid">
+                    <a href="catalogo.html?category=corazones" class="category-card card-corazones">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Creados para ti</span>
+                                <h2 data-text="CORAZONES">CORAZONES</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="catalogo.html?category=corazones-alados" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Alas de amor</span>
+                                <h2 data-text="ALADOS">ALADOS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=nichos-y-altares" class="category-card card-nichos">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Especiales</span>
+                                <h2 data-text="NICHOS">NICHOS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=mexicanos-y-calacas" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Tradición</span>
+                                <h2 data-text="MEXICANOS">MEXICANOS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=grabados" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Personalizados</span>
+                                <h2 data-text="GRABADOS">GRABADOS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=deco" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Decoración</span>
+                                <h2 data-text="DECO">DECO</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=navidad" class="category-card card-navidad">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Temporada</span>
+                                <h2 data-text="NAVIDAD">NAVIDAD</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=stencil" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Pintura</span>
+                                <h2 data-text="STENCILS">STENCILS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=mistico-y-mas" class="category-card card-mistico">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Energía</span>
+                                <h2 data-text="MÍSTICO">MÍSTICO</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=otros-insumos" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Para crear</span>
+                                <h2 data-text="INSUMOS">INSUMOS</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="catalogo.html?category=libros-3d" class="category-card">
+                        <div class="card-inner">
+                            <div class="card-bg"></div>
+                            <div class="card-overlay"></div>
+                            <div class="card-content">
+                                <span class="subtitle">Tres dimensiones</span>
+                                <h2 data-text="LIBROS 3D">LIBROS 3D</h2>
+                                <div class="divider"></div>
+                                <span class="explore">Explorar colección <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
     </section>
+
+
 
     <!-- CARACTERISTICAS CLAVE -->
     <section class="features-section">
@@ -334,23 +392,41 @@
         </div>
     </footer>
 
+    <!-- PANEL CARRITO DRAWER (Lado derecho inferior) -->
+    <div id="cartPanel" onmouseenter="showCart()" onmouseleave="hideCart()" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 12px;">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 700; font-family: var(--font-serif);">Tu Pedido</h2>
+            <button onclick="toggleCart()" style="border: none; background: rgba(75, 55, 45, 0.05); font-size: 16px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main);">✕</button>
+        </div>
+
+        <div class="cart-items-list" id="cartItems">
+            <!-- Items del carrito -->
+        </div>
+
+        <div id="cartTotal">
+            <span>Total:</span>
+            <span>$0</span>
+        </div>
+
+        <button class="modal-btn-primary" onclick="location.href='carrito.html'" style="margin-top: 16px;">
+            📋 Revisar Pedido y Enviar Cotización
+        </button>
+
+        <button class="modal-btn-secondary" onclick="vaciarCarrito()" style="margin-top: 10px; background: var(--danger-gradient); color: white;">
+            🗑 Vaciar Carrito
+        </button>
+    </div>
+
+    <!-- TOAST AVISO -->
+    <div id="toast">
+        ✔ Agregado al pedido
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="productos.js"></script>
+    <script src="cart-shared.js"></script>
+    <script src="script.js"></script>
     <script>
-        function toggleMobileMenu() {
-            const menu = document.getElementById("navMenu");
-            const toggle = document.getElementById("menuToggle");
-            menu.classList.toggle("show");
-            toggle.classList.toggle("active");
-        }
-
-        // Actualizar contador del carrito en el navbar
-        function updateCartBadge() {
-            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-            document.getElementById("cartCount").textContent = `(${totalItems})`;
-        }
-
-        window.onload = updateCartBadge;
-
         // Intersection Observer para efecto hover automático al escrolear en celulares
         function initMobileObserver() {
             if (window.innerWidth <= 768) {
@@ -358,7 +434,6 @@
                 
                 const observerOptions = {
                     root: null,
-                    // Define una franja en el tercio central de la pantalla
                     rootMargin: "-35% 0px -35% 0px",
                     threshold: 0.2
                 };

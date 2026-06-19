@@ -5,18 +5,34 @@ let busquedaActual = "";
 let productoActual = null;
 let opcionPreseleccionada = "";
 
-// Cargar categorías en el sidebar al inicializar
+// Cargar categorías en el dropdown superior al inicializar
 function inicializarCategorias() {
-    const list = document.getElementById("categoryList");
+    const dropdownContent = document.getElementById("categoriesDropdownContent");
+    if (!dropdownContent) return;
     
-    // Generar botones para cada categoría del CATEGORIAS_MAP
+    dropdownContent.innerHTML = "";
+    
+    // Opción para "Todas las categorías"
+    const allBtn = document.createElement("a");
+    allBtn.className = "dropdown-item";
+    allBtn.id = "dropdown-btn-all";
+    allBtn.href = "#";
+    allBtn.innerHTML = "📋 Todas las categorías";
+    allBtn.onclick = (e) => {
+        e.preventDefault();
+        setCategory("all");
+        closeDropdown();
+    };
+    dropdownContent.appendChild(allBtn);
+
+    // Generar enlaces para cada categoría del CATEGORIAS_MAP
     Object.entries(CATEGORIAS_MAP).forEach(([key, label]) => {
-        const btn = document.createElement("button");
-        btn.className = "category-btn";
-        btn.id = `btn-${key}`;
-        btn.onclick = () => setCategory(key);
+        const item = document.createElement("a");
+        item.className = "dropdown-item";
+        item.id = `dropdown-btn-${key}`;
+        item.href = "#";
         
-        // Asignar iconos amigables para cada botón
+        // Asignar iconos amigables para cada categoría
         let icon = "📦";
         if (key === "corazones") icon = "❤️";
         else if (key === "corazones-alados") icon = "👼";
@@ -27,24 +43,62 @@ function inicializarCategorias() {
         else if (key === "deco") icon = "🏡";
         else if (key === "stencil") icon = "🎨";
         else if (key === "mistico-y-mas") icon = "🕉️";
-        else if (key === "letras") icon = "🔠";
-        else if (key === "aros") icon = "💎";
+        else if (key === "libros-3d") icon = "📚";
         
-        btn.innerHTML = `${icon} ${label}`;
-        list.appendChild(btn);
+        item.innerHTML = `${icon} ${label}`;
+        item.onclick = (e) => {
+            e.preventDefault();
+            setCategory(key);
+            closeDropdown();
+        };
+        dropdownContent.appendChild(item);
     });
 }
 
+// Control del Dropdown de Categorías
+function toggleDropdown(e) {
+    e.stopPropagation();
+    const content = document.getElementById("categoriesDropdownContent");
+    if (content) {
+        content.classList.toggle("show");
+    }
+}
+
+// Función para cerrar el dropdown
+function closeDropdown() {
+    const content = document.getElementById("categoriesDropdownContent");
+    if (content) {
+        content.classList.remove("show");
+    }
+}
+
+// Cerrar al hacer click fuera del dropdown
+window.addEventListener("click", (e) => {
+    if (!e.target.closest(".categories-dropdown")) {
+        closeDropdown();
+    }
+});
+
 // Establecer categoría activa y volver a renderizar
 function setCategory(catKey) {
+    // Si no estamos en la página del catálogo (no existe el productsGrid), redirigimos
+    if (!document.getElementById("productsGrid")) {
+        if (catKey === "all") {
+            window.location.href = "catalogo.html";
+        } else {
+            window.location.href = `catalogo.html?category=${catKey}`;
+        }
+        return;
+    }
+
     categoriaActiva = catKey;
     
-    // Actualizar clases activas en los botones del sidebar
-    document.querySelectorAll(".category-btn").forEach(btn => {
+    // Actualizar clases activas en los botones del dropdown
+    document.querySelectorAll(".dropdown-item").forEach(btn => {
         btn.classList.remove("active");
     });
     
-    const activeBtn = document.getElementById(`btn-${catKey}`);
+    const activeBtn = document.getElementById(`dropdown-btn-${catKey}`);
     if (activeBtn) activeBtn.classList.add("active");
     
     // Actualizar parámetro en la URL sin refrescar
@@ -59,15 +113,52 @@ function setCategory(catKey) {
     renderCatalog();
 }
 
-// Buscar productos
+// Buscar productos en tiempo real desde la barra de navegación
+function handleNavbarSearch() {
+    const searchInput = document.getElementById("searchInput");
+    if (!searchInput) return;
+    const query = searchInput.value.trim();
+    
+    // Si estamos en la página del catálogo, filtramos en tiempo real
+    if (document.getElementById("productsGrid")) {
+        busquedaActual = query.toLowerCase();
+        
+        // Actualizar parámetro en la URL sin refrescar
+        const url = new URL(window.location);
+        if (query) {
+            url.searchParams.set("search", query);
+        } else {
+            url.searchParams.delete("search");
+        }
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+        
+        renderCatalog();
+    }
+}
+
+// Buscar productos al presionar Enter o hacer clic en la lupa (🔍)
+function triggerSearch() {
+    const searchInput = document.getElementById("searchInput");
+    if (!searchInput) return;
+    const query = searchInput.value.trim();
+    
+    if (document.getElementById("productsGrid")) {
+        busquedaActual = query.toLowerCase();
+        renderCatalog();
+    } else {
+        window.location.href = `catalogo.html?search=${encodeURIComponent(query)}`;
+    }
+}
+
+// Mantener función original para compatibilidad
 function handleSearch() {
-    busquedaActual = document.getElementById("searchInput").value.trim().toLowerCase();
-    renderCatalog();
+    handleNavbarSearch();
 }
 
 // Renderizar grilla de catálogo
 function renderCatalog() {
     const grid = document.getElementById("productsGrid");
+    if (!grid) return;
     grid.innerHTML = "";
     
     // Obtener sólo productos padres (filtrar los aliases de medidas que apuntan a padres)
@@ -78,7 +169,7 @@ function renderCatalog() {
         const clasificacion = clasificarProducto(key, p);
         
         // 1. Filtrar por categoría
-        if (categoriaActiva !== "all" && clasificacion !== categoriaActiva) {
+        if (categoriaActiva !== "all" && (!clasificacion || !clasificacion.includes(categoriaActiva))) {
             return false;
         }
         
@@ -629,11 +720,23 @@ function toggleMobileMenu() {
 // Leer URL params al cargar
 function procesarParametrosURL() {
     const params = new URLSearchParams(window.location.search);
+    let autoScroll = false;
+    
+    // Cargar búsqueda de URL si existe
+    const searchVal = params.get("search");
+    if (searchVal) {
+        busquedaActual = searchVal.trim().toLowerCase();
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.value = searchVal;
+        }
+    }
     
     // Cargar categoría de URL si existe
     const cat = params.get("category");
     if (cat && CATEGORIAS_MAP[cat]) {
         setCategory(cat);
+        autoScroll = true;
     } else {
         renderCatalog();
     }
@@ -642,7 +745,118 @@ function procesarParametrosURL() {
     const prodId = params.get("producto");
     if (prodId && productos[prodId]) {
         abrirCompraModal(prodId);
+        autoScroll = true;
     }
+    
+    if (autoScroll) {
+        setTimeout(() => {
+            const section = document.getElementById("catalog-section");
+            if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 150);
+    }
+}
+
+// Carrusel de la página de inicio (Productos Destacados)
+// El cliente puede agregar o remover imágenes de forma sencilla aquí:
+const IMAGENES_CARROUSEL = [
+    { src: "img/Arabesco Floral1.jpg", title: "Arabesco Floral", subtitle: "Diseños Exclusivos" },
+    { src: "img/Comp8.jpg", title: "Composición 8", subtitle: "Arte en Madera" },
+    { src: "img/Tienda vintage2.jpg", title: "Tienda Vintage", subtitle: "Estilo Único" },
+    { src: "img/Libromagico1.jpg", title: "Libro Mágico", subtitle: "Creatividad en 3D" }
+];
+
+let carouselIndex = 0;
+let carouselInterval = null;
+
+function inicializarCarrusel() {
+    const track = document.getElementById("carouselTrack");
+    const dotsContainer = document.getElementById("carouselDots");
+    if (!track || !dotsContainer) return;
+    
+    track.innerHTML = "";
+    dotsContainer.innerHTML = "";
+    
+    IMAGENES_CARROUSEL.forEach((img, index) => {
+        // Crear slide
+        const slide = document.createElement("div");
+        slide.className = `carousel-slide ${index === 0 ? "active" : ""}`;
+        
+        slide.innerHTML = `
+            <img src="${img.src}" alt="${img.title}">
+            <div class="carousel-overlay">
+                <div class="carousel-caption">
+                    <p>${img.subtitle}</p>
+                    <h3>${img.title}</h3>
+                </div>
+            </div>
+        `;
+        track.appendChild(slide);
+        
+        // Crear dot
+        const dot = document.createElement("button");
+        dot.className = `carousel-dot ${index === 0 ? "active" : ""}`;
+        dot.onclick = () => irASlide(index);
+        dotsContainer.appendChild(dot);
+    });
+    
+    iniciarAutoSlide();
+}
+
+function iniciarAutoSlide() {
+    detenerAutoSlide();
+    carouselInterval = setInterval(() => {
+        moveCarousel(1);
+    }, 4000); // Cambia cada 4 segundos
+}
+
+function detenerAutoSlide() {
+    if (carouselInterval) {
+        clearInterval(carouselInterval);
+    }
+}
+
+function moveCarousel(direction) {
+    const slides = document.querySelectorAll(".carousel-slide");
+    if (slides.length === 0) return;
+    
+    carouselIndex = (carouselIndex + direction + slides.length) % slides.length;
+    actualizarCarrusel();
+    iniciarAutoSlide(); // Reiniciar timer
+}
+
+function irASlide(index) {
+    carouselIndex = index;
+    actualizarCarrusel();
+    iniciarAutoSlide(); // Reiniciar timer
+}
+
+function actualizarCarrusel() {
+    const track = document.getElementById("carouselTrack");
+    if (!track) return;
+    
+    track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+    
+    // Actualizar clase active en slides
+    const slides = document.querySelectorAll(".carousel-slide");
+    slides.forEach((slide, index) => {
+        if (index === carouselIndex) {
+            slide.classList.add("active");
+        } else {
+            slide.classList.remove("active");
+        }
+    });
+    
+    // Actualizar dots
+    const dots = document.querySelectorAll(".carousel-dot");
+    dots.forEach((dot, index) => {
+        if (index === carouselIndex) {
+            dot.classList.add("active");
+        } else {
+            dot.classList.remove("active");
+        }
+    });
 }
 
 // Inicializar al cargar
@@ -650,4 +864,5 @@ window.addEventListener("DOMContentLoaded", () => {
     inicializarCategorias();
     renderCarrito();
     procesarParametrosURL();
+    inicializarCarrusel();
 });
