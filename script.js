@@ -150,6 +150,41 @@ function triggerSearch() {
     }
 }
 
+// Alternar visibilidad de la barra de búsqueda en celular
+function toggleSearchInput(event) {
+    event.stopPropagation();
+    const container = document.querySelector(".search-bar-container");
+    if (!container) return;
+    const input = container.querySelector("input");
+    if (!input) return;
+    
+    if (window.innerWidth <= 768) {
+        if (!container.classList.contains("active")) {
+            container.classList.add("active");
+            input.focus();
+        } else {
+            if (input.value.trim() !== "") {
+                triggerSearch();
+            } else {
+                container.classList.remove("active");
+            }
+        }
+    } else {
+        triggerSearch();
+    }
+}
+
+// Cerrar barra de búsqueda al hacer clic fuera
+window.addEventListener("click", (e) => {
+    const container = document.querySelector(".search-bar-container");
+    if (container && !e.target.closest(".search-bar-container")) {
+        const input = container.querySelector("input");
+        if (input && input.value.trim() === "") {
+            container.classList.remove("active");
+        }
+    }
+});
+
 // Mantener función original para compatibilidad
 function handleSearch() {
     handleNavbarSearch();
@@ -251,7 +286,7 @@ function renderCatalog() {
                     ${precioHtml}
                 </div>
                 <button class="product-action-btn" onclick="abrirCompraModal('${key}')">
-                    🛒 Agregar al pedido
+                    🛒 Lo quiero
                 </button>
             </div>
         `;
@@ -363,7 +398,7 @@ function abrirSelectorProducto() {
         </div>
 
         <button onclick="agregarProducto()" class="modal-btn-primary">
-            Agregar al pedido
+            Lo quiero
         </button>
 
         <button onclick="cerrarPopup()" class="modal-btn-secondary">

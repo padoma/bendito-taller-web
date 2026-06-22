@@ -84,6 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
     .main-navbar::before {
         height: 30px; /* Achicado en móviles */
+        background-size: 180% 100%; /* Estirar las líneas horizontalmente para que se vean más anchas */
     }
     #catalog-section {
         scroll-margin-top: 140px;
@@ -318,6 +319,12 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.cart-btn-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .nav-cart-btn * { pointer-events: none; } .nav-cart-btn:hover {
@@ -1306,7 +1313,8 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 8px;
     transition: transform 0.3s ease;
 }
 
@@ -1443,7 +1451,8 @@ h1, h2, h3, h4, h5, h6 {
 .modal-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 6px;
 }
 
 .modal-input-group {
@@ -1632,49 +1641,165 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
     .categories-grid {
         grid-template-columns: 1fr;
+        row-gap: 28px; /* Separación vertical de al menos 0.7 cm en celular */
     }
     .nav-container {
-        flex-wrap: wrap;
-        padding: 8px 16px;
-    }
-    .nav-left {
-        width: 100%;
-        order: 3;
-        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
         justify-content: space-between;
-        border-top: 1px dashed rgba(75, 55, 45, 0.1);
-        padding-top: 10px;
+        align-items: center;
+        padding: 14px 16px 10px 16px;
+        position: relative;
+    }
+    .nav-left, .nav-right-group {
+        display: contents;
+    }
+    .nav-cart-btn {
+        order: 1;
+        display: flex;
+        flex-direction: row; /* En una sola fila horizontal */
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px; /* Ajustado al largo del texto */
+        border-radius: 18px;
+        background: linear-gradient(135deg, #889c90 0%, #708277 100%);
+        color: white !important;
+        border: none;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s;
+        cursor: pointer;
+        gap: 6px; /* Separación horizontal */
+        box-sizing: border-box;
+        height: 38px; /* Misma altura que Bendito Taller para simetría */
+    }
+    .nav-cart-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+    .cart-btn-icon {
+        font-size: 15px;
+        line-height: 1.1;
+    }
+    .cart-btn-label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    .nav-brand-btn {
+        order: 2;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 0 18px; /* Ajustado al largo del texto */
+        border-radius: 18px;
+        background: linear-gradient(135deg, #889c90 0%, #708277 100%);
+        color: white !important;
+        box-shadow: var(--shadow-sm);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        transition: all 0.2s;
+        box-sizing: border-box;
+        height: 38px; /* Altura fija para alinear con botón del carrito */
+    }
+    .nav-brand-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
     }
     .categories-dropdown {
-        flex-shrink: 0;
+        position: absolute;
+        top: -25px; /* Posicionado y centrado sobre el toldo de 30px */
+        left: 12px;
+        z-index: 1010;
+        height: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .categories-dropdown .dropdown-btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 13px; /* Un poco más grande para mejor lectura sobre el toldo */
+    }
+    .categories-dropdown .dropdown-btn .arrow-down {
+        display: none;
     }
     .search-bar-container {
-        flex-grow: 1;
-        max-width: 100%;
-        margin-left: 10px;
-    }
-    .nav-menu {
-        display: none;
-        flex-direction: column;
         position: absolute;
-        top: 100%;
-        left: 0;
+        top: -25px; /* Centrado sobre el toldo de 30px */
+        right: 12px;
+        z-index: 1010;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        height: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .search-bar-container input {
+        display: none;
+        position: absolute;
+        top: 25px; /* Abre justo debajo del toldo de 30px */
         right: 0;
-        background: var(--bg-card);
-        border-bottom: 1px solid var(--border-color);
-        padding: 16px 24px;
-        gap: 12px;
+        width: 180px;
+        background: #fcf6ef;
+        border: 1.5px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 8px 12px;
+        z-index: 1000;
         box-shadow: var(--shadow-md);
-        z-index: 1050;
+        color: var(--text-main);
     }
-    .nav-menu.show {
-        display: flex;
+    .search-bar-container.active input {
+        display: block;
     }
-    .hamburger {
+    .search-btn {
+        background: transparent;
+        border: none;
+        font-size: 15px; /* Sintonizado con el tamaño de las letras */
+        padding: 0;
+        box-shadow: none;
+        cursor: pointer;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: auto;
     }
     .hero-title {
         font-size: 32px;
+    }
+    .catalog-container {
+        padding: 16px 12px 40px 12px;
+    }
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5cm; /* Separados por 0.5 cm */
+    }
+    .product-info {
+        padding: 10px;
+    }
+    .product-title {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    .price-row {
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+    .product-action-btn {
+        font-size: 12px;
+        padding: 8px 4px;
+        margin-top: 8px;
     }
 }
 @media (max-width: 480px) {
@@ -2012,7 +2137,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ===== RESPONSIVE CARD SCALING & GENERAL MOBILE OPTIMIZATIONS ===== */
 @media (max-width: 480px) {
     .category-card {
-        min-height: 200px;
+        min-height: auto;
+        aspect-ratio: 416 / 274;
         padding: 0px;
     }
     
@@ -2031,6 +2157,8 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .card-content {
+        width: 100%;
+        box-sizing: border-box;
         padding: 20px 10px;
     }
     
