@@ -972,8 +972,8 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 406px;
-    height: 264px;
+    width: 345px;
+    height: 224px;
     transform: translate(-50%, -50%) scale(1);
     background-image: url('img/fondo_letra.png');
     background-size: 100% 100%;
@@ -981,14 +981,24 @@ h1, h2, h3, h4, h5, h6 {
     background-repeat: no-repeat;
     z-index: -2;
     pointer-events: none;
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: transform;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12)) drop-shadow(0 0 0px transparent);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+    will-change: transform, filter;
 }
 
 .category-card:hover .card-content::before,
 .category-card.active .card-content::before {
     transform: translate(-50%, -50%) scale(1.05);
+    animation: badgeGlowPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes badgeGlowPulse {
+    0%, 100% {
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12)) drop-shadow(0 0 3px rgba(230, 189, 179, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.15)) drop-shadow(0 0 12px rgba(230, 189, 179, 0.7));
+    }
 }
 
 .card-content::after {
@@ -996,8 +1006,8 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 406px;
-    height: 264px;
+    width: 345px;
+    height: 224px;
     transform: translate(-50%, -50%) scale(1);
     background-image: url('https://padoma.github.io/bendito-taller-carrito/img/grabados_bg.jpg');
     background-size: cover;
@@ -1021,6 +1031,10 @@ h1, h2, h3, h4, h5, h6 {
     background-image: url('img/CORAZONES_2.jpg');
 }
 
+.card-nichos .card-content::after {
+    background-image: url('img/FONDO_NICHOS.jpg');
+}
+
 .category-card:hover .card-content::after,
 .category-card.active .card-content::after {
     transform: translate(-50%, -50%) scale(1.05);
@@ -1032,17 +1046,80 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 4px;
     font-weight: 600;
     color: #4b372d;
-    margin-bottom: 8px;
-    transform: translateY(15px) translate3d(0, 0, 0);
-    opacity: 0;
+    position: absolute;
+    top: calc(50% + 28px);
+    left: 50%;
+    transform: translate(-50%, 0) translate3d(0, 0, 0);
+    opacity: 1;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.1s, opacity 0.4s ease 0.1s;
     will-change: transform, opacity;
+    white-space: nowrap;
 }
 
+/* Capa de destello metálico (shimmer) que recorre el contorno de fondo_letra.png */
+.category-card .card-inner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 345px;
+    height: 224px;
+    transform: translate(-50%, -50%) scale(1);
+    background: linear-gradient(115deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0) 35%, 
+        rgba(255, 255, 255, 0.15) 45%, 
+        rgba(255, 255, 255, 0.6) 50%, 
+        rgba(255, 255, 255, 0.15) 55%, 
+        rgba(255, 255, 255, 0) 65%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    background-position: 200% 0;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 4; /* Encima de card-content para evitar desalineación por transformaciones de texto */
+    mix-blend-mode: screen;
+    opacity: 0;
+    
+    /* Máscara compuesta: dibuja el badge completo y le resta uno un 6% más pequeño en el centro */
+    -webkit-mask-image: url('img/fondo_letra.png'), url('img/fondo_letra.png');
+    mask-image: url('img/fondo_letra.png'), url('img/fondo_letra.png');
+    -webkit-mask-size: 100% 100%, 94% 90%;
+    mask-size: 100% 100%, 94% 90%;
+    -webkit-mask-position: center, center;
+    mask-position: center, center;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-composite: destination-out; /* WebKit/Chrome/Safari: resta el centro */
+    mask-composite: subtract; /* Estándar W3C: resta el centro */
+    
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    will-change: transform, opacity, background-position;
+}
+
+.category-card:hover .card-inner::after,
+.category-card.active .card-inner::after {
+    opacity: 0.8; /* Destello tenue y profesional */
+    transform: translate(-50%, -50%) scale(1.05);
+    animation: borderShimmerSweep 8.8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+@keyframes borderShimmerSweep {
+    0% {
+        background-position: 200% 0;
+    }
+    35%, 100% {
+        background-position: -120% 0;
+    }
+}
+
+
+
 .card-content h2 {
-    font-family: 'Playfair Display', var(--font-serif);
+    font-family: var(--font-serif);
     font-size: 40px; /* Letra más grande (de 34px a 40px) */
-    font-weight: 700; /* Peso elegante de Playfair Display */
+    font-weight: 700; /* Peso elegante de Merriweather */
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #ffffff; /* Blanco para el contorno */
@@ -1075,9 +1152,11 @@ h1, h2, h3, h4, h5, h6 {
 .divider {
     width: 60px;
     height: 2px;
-    background: var(--primary-color);
-    margin: 12px 0;
-    transform: scaleX(0);
+    background: #FFBF00; /* Color dorado */
+    position: absolute;
+    top: calc(50% + 56px);
+    left: 50%;
+    transform: translate(-50%, 0) scaleX(1);
     transform-origin: center;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
     border-radius: 2px;
@@ -1093,16 +1172,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .category-card:hover .subtitle,
-.category-card.active .subtitle,
-.category-card:hover .explore,
-.category-card.active .explore {
+.category-card.active .subtitle {
     opacity: 1;
-    transform: translateY(0) translate3d(0, 0, 0);
+    transform: translate(-50%, 0) translate3d(0, 0, 0);
 }
 
 .category-card:hover .divider,
 .category-card.active .divider {
-    transform: scaleX(1);
+    transform: translate(-50%, 0) scaleX(1);
 }
 
 .category-card:hover .arrow,
@@ -1112,7 +1189,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .category-card:hover h2,
 .category-card.active h2 {
-    transform: translateY(-6px) scale(1.03) translate3d(0, 0, 0);
+    transform: scale(1.03) translate3d(0, 0, 0);
     text-shadow: 0 4px 12px rgba(75, 55, 45, 0.15); /* Sutil sombra café */
 }
 
@@ -1652,10 +1729,10 @@ h1, h2, h3, h4, h5, h6 {
         position: relative;
     }
     .nav-left, .nav-right-group {
-        display: contents;
+        display: contents !important;
     }
     .nav-cart-btn {
-        order: 1;
+        order: 3 !important;
         display: flex;
         flex-direction: row; /* En una sola fila horizontal */
         align-items: center;
@@ -1670,7 +1747,7 @@ h1, h2, h3, h4, h5, h6 {
         cursor: pointer;
         gap: 6px; /* Separación horizontal */
         box-sizing: border-box;
-        height: 38px; /* Misma altura que Bendito Taller para simetría */
+        height: 38px; /* Misma altura que Categorías para simetría */
     }
     .nav-cart-btn:hover {
         transform: translateY(-1px);
@@ -1689,67 +1766,67 @@ h1, h2, h3, h4, h5, h6 {
         font-weight: 600;
     }
     .nav-brand-btn {
-        order: 2;
+        display: none !important;
+    }
+    .categories-dropdown {
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1010;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        order: 1 !important;
+    }
+    .categories-dropdown .dropdown-btn {
+        background: linear-gradient(135deg, #889c90 0%, #708277 100%);
+        color: white !important;
         font-size: 11px;
         font-weight: 600;
         padding: 0 18px; /* Ajustado al largo del texto */
         border-radius: 18px;
-        background: linear-gradient(135deg, #889c90 0%, #708277 100%);
-        color: white !important;
         box-shadow: var(--shadow-sm);
-        text-decoration: none;
+        height: 38px; /* Altura fija para alinear con botón del carrito y lupa */
         display: inline-flex;
         align-items: center;
         justify-content: center;
         border: none;
-        transition: all 0.2s;
+        cursor: pointer;
         box-sizing: border-box;
-        height: 38px; /* Altura fija para alinear con botón del carrito */
+        transition: all 0.2s;
     }
-    .nav-brand-btn:hover {
+    .categories-dropdown .dropdown-btn:hover {
         transform: translateY(-1px);
         box-shadow: var(--shadow-md);
     }
-    .categories-dropdown {
-        position: absolute;
-        top: -25px; /* Posicionado y centrado sobre el toldo de 30px */
-        left: 12px;
-        z-index: 1010;
-        height: 20px;
-        display: flex;
-        align-items: center;
-    }
-    .categories-dropdown .dropdown-btn {
-        background: transparent;
-        border: none;
-        padding: 0;
-        box-shadow: none;
-        color: var(--text-main);
-        font-weight: 600;
-        font-size: 13px; /* Un poco más grande para mejor lectura sobre el toldo */
-    }
     .categories-dropdown .dropdown-btn .arrow-down {
-        display: none;
+        display: inline-block;
+        margin-left: 6px;
+        font-size: 9px;
+        color: white !important;
     }
     .search-bar-container {
-        position: absolute;
-        top: -25px; /* Centrado sobre el toldo de 30px */
-        right: 12px;
+        position: relative;
+        top: 0;
+        right: 0;
         z-index: 1010;
         background: transparent;
         border: none;
         box-shadow: none;
         margin: 0;
         padding: 0;
-        height: 20px;
+        height: 38px;
         display: flex;
         align-items: center;
+        justify-content: center;
+        order: 2 !important;
     }
     .search-bar-container input {
         display: none;
         position: absolute;
-        top: 25px; /* Abre justo debajo del toldo de 30px */
-        right: 0;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
         width: 180px;
         background: #fcf6ef;
         border: 1.5px solid var(--border-color);
@@ -1758,6 +1835,7 @@ h1, h2, h3, h4, h5, h6 {
         z-index: 1000;
         box-shadow: var(--shadow-md);
         color: var(--text-main);
+        margin-top: 8px; /* Espacio para que no choque con los botones */
     }
     .search-bar-container.active input {
         display: block;
@@ -1765,15 +1843,19 @@ h1, h2, h3, h4, h5, h6 {
     .search-btn {
         background: transparent;
         border: none;
-        font-size: 15px; /* Sintonizado con el tamaño de las letras */
-        padding: 0;
+        font-size: 18px; /* Sintonizado con el tamaño de las letras */
+        padding: 8px;
         box-shadow: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: auto;
-        height: auto;
+        width: 38px;
+        height: 38px;
+        transition: transform 0.2s;
+    }
+    .search-btn:hover {
+        transform: scale(1.1);
     }
     .hero-title {
         font-size: 32px;
@@ -1918,57 +2000,58 @@ h1, h2, h3, h4, h5, h6 {
     height: 120%; /* Sobresale un poco del banner para naturalidad */
     width: auto;
     object-fit: contain;
-    opacity: 0.85;
+    opacity: 0.2; /* Reducida un 30% (de 0.3 a 0.2) para mayor transparencia */
     transition: transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
 }
 
 /* Efecto hover interactivo: las ramas brillan y se mueven levemente */
-.decor-banner-custom:hover .branch-img {
-    opacity: 1;
+.decor-banner-custom:hover .branch-img,
+.dots-banner-container:hover .branch-img {
+    opacity: 0.35; /* Reducida un 30% (de 0.5 a 0.35) para mayor transparencia en hover */
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
 }
 
 /* Posicionamiento específico y distribución de las ramas */
 /* 1. Rama Principal (rama1.png) - El esqueleto central */
 .branch-single {
-    left: 18px; /* Mueve la rama 1 cm (aprox. 38px) hacia el centro de la pantalla */
+    left: 0; /* Ubicada exactamente al borde (pegada) */
     top: -10%;
     height: 125%;
     z-index: 3;
     margin-top: -38px; /* Mueve la rama 1 cm (aprox. 38px) hacia arriba */
-    transform: rotate(65deg); /* Girada -25° a la izquierda (90deg - 25deg) */
+    transform: rotate(-90deg); /* Girada 180° al contrario (-90deg) para quedar vertical invertida */
     animation: sway-single 4s ease-in-out infinite alternate;
 }
 
 /* 2. Rama Secundaria (rama31.png) - Capa de profundidad detrás de la principal */
 .branch-second {
-    left: 284px; /* Desplazada 1 cm más (aprox. 38px) hacia la derecha */
+    left: 35px; /* Ubicada al lado de la principal (pegada a ella y al borde) */
     top: -10%;
     height: 125%;
     z-index: 2; /* Por detrás de la principal */
     margin-top: -34px; /* Subida 4mm (aprox. 15px) hacia arriba */
-    transform: scaleX(-1) scaleY(-1) rotate(-37deg); /* Volteada horizontal y verticalmente, rotada -37° */
-    opacity: 0.8;
+    transform: scaleX(-1) scaleY(-1) rotate(-90deg); /* Volteada horizontal y verticalmente, rotada -90° */
+    opacity: 0.25;
     animation: sway-second 4.5s ease-in-out infinite alternate;
 }
 
 /* ANIMACIONES DE BALANCEO SUAVE (EFECTO BRISA) */
 @keyframes sway-single {
     0% {
-        transform: rotate(65deg) scale(1);
+        transform: rotate(-90deg) scale(1);
     }
     100% {
-        transform: rotate(70deg) scale(1.03) translateY(-4px) translateX(2px);
+        transform: rotate(-85deg) scale(1.03) translateY(-4px) translateX(2px);
     }
 }
 
 @keyframes sway-second {
     0% {
-        transform: scaleX(-1) scaleY(-1) rotate(-37deg) scale(1);
+        transform: scaleX(-1) scaleY(-1) rotate(-90deg) scale(1);
     }
     100% {
-        transform: scaleX(-1) scaleY(-1) rotate(-32deg) scale(1.03) translateY(-4px) translateX(-2px);
+        transform: scaleX(-1) scaleY(-1) rotate(-85deg) scale(1.03) translateY(-4px) translateX(-2px);
     }
 }
 
@@ -1981,10 +2064,10 @@ h1, h2, h3, h4, h5, h6 {
         width: 28%;
     }
     .branch-single {
-        left: 3px; /* Ajuste relativo para la rama principal en pantallas medianas */
+        left: 0; /* Pegada al borde en pantallas medianas */
     }
     .branch-second {
-        left: 269px; /* Desplazada 1 cm más (aprox. 38px) hacia la derecha */
+        left: 30px; /* Pegada al lado de la principal */
     }
 }
 
@@ -1996,9 +2079,6 @@ h1, h2, h3, h4, h5, h6 {
     .banner-branches {
         width: 25%;
     }
-    .branch-img {
-        opacity: 0.65;
-    }
     .decor-banner-title {
         font-size: 30px;
     }
@@ -2008,13 +2088,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
-    /* En dispositivos móviles, ocultamos las ramas por completo para garantizar
-       la legibilidad absoluta del texto, tal como en una web profesional. */
+    /* En dispositivos móviles, mostramos solo una rama a cada lado con tamaño ajustado */
     .banner-branches {
-        display: none;
+        display: block;
+        width: 15%;
+    }
+    .branch-second {
+        display: none; /* Ocultar la rama secundaria */
+    }
+    .branch-single {
+        left: 0; /* Pegada al borde lateral en móviles */
+        top: 5%;
+        height: 80%; /* Reducida la altura para achicar el ancho y ganar separación en el centro */
+        margin-top: 0;
     }
     .decor-banner-content {
-        max-width: 95%;
+        max-width: 75%; /* Dejar espacio para las ramas */
         padding: 10px 0;
     }
     .decor-banner-custom {
@@ -2034,12 +2123,9 @@ h1, h2, h3, h4, h5, h6 {
    DOTS BANNER (INTERACTIVO)
 ========================== */
 .dots-banner-container {
-    background-color: #af887c; /* Fondo floral atenuado */
-    background-image: url('img/fondo_banner.jpg');
-    background-size: cover;
-    background-position: center;
-    min-height: 180px;
-    padding: 40px 24px;
+    background-color: #DDB6A8;
+    min-height: 120px;
+    padding: 10px 24px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -2050,9 +2136,30 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box;
 }
 
+.dots-banner-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('img/tapiz_ramas_largo.png');
+    background-size: auto 119px; /* Estirado un 20% más (99px * 1.2 = 118.8px) */
+    background-position: center;
+    background-repeat: repeat-x;
+    opacity: 0.075; /* 92.5% transparente (50% más transparente que antes) */
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.4s ease; /* Transición suave para iluminarse */
+}
+
 .dots-banner-container:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.dots-banner-container:hover::after {
+    opacity: 0.22; /* Se ilumina al pasar el mouse por encima */
 }
 
 .dots-banner-container::before {
@@ -2104,6 +2211,8 @@ h1, h2, h3, h4, h5, h6 {
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
+
+
 @media (max-width: 950px) {
     .dots-banner-content {
         max-width: 70%;
@@ -2118,11 +2227,11 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 768px) {
     .dots-banner-content {
-        max-width: 95%;
-        padding: 10px 0;
+        max-width: 90%; /* Ampliado porque ya no hay ramas a los lados */
+        padding: 0; /* Removido padding para recortar altura */
     }
     .dots-banner-container {
-        padding: 30px 16px;
+        padding: 4px 16px; /* Reducido de 10px a 4px para recortar altura */
         min-height: auto;
     }
     .dots-banner-title {
@@ -2163,12 +2272,15 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .card-content::before,
-    .card-content::after {
-        width: 95%;
-        max-width: 406px;
+    .card-content::after,
+    .category-card .card-inner::after {
+        width: 80%; /* Reducido de 95% para ser 15% más pequeño en celular */
+        max-width: 293px; /* Reducido de 345px (345 * 0.85 = 293) */
         height: auto;
-        aspect-ratio: 406 / 264;
+        aspect-ratio: 345 / 224;
     }
+    
+
     
     .card-content h2 {
         font-size: 26px !important;
