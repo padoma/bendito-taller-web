@@ -304,6 +304,20 @@ function renderCatalog() {
         return true;
     });
 
+    // Ordenar productosFiltrados para agrupar productos con medida única (simple) arriba de los con medidas múltiples (medidas)
+    productosFiltrados.sort((a, b) => {
+        const typeA = productos[a].tipo || "simple";
+        const typeB = productos[b].tipo || "simple";
+        
+        if (typeA === "simple" && typeB === "medidas") {
+            return -1;
+        }
+        if (typeA === "medidas" && typeB === "simple") {
+            return 1;
+        }
+        return 0;
+    });
+
     if (productosFiltrados.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px 0; font-size: 16px;">No se encontraron productos en esta categoría. 📦</div>`;
         return;
@@ -314,19 +328,24 @@ function renderCatalog() {
         let precioHtml = "";
         
         if (p.tipo === "medidas") {
-            const minMayor = Math.min(...p.opciones.map(o => o.mayor));
-            const maxMayor = Math.max(...p.opciones.map(o => o.mayor));
-            const minUnitario = Math.min(...p.opciones.map(o => o.unitario));
-            const maxUnitario = Math.max(...p.opciones.map(o => o.unitario));
-            
+            let rowsHtml = "";
+            p.opciones.forEach(op => {
+                rowsHtml += `
+                    <div class="measure-price-row">
+                        <span class="measure-label">${op.medida}</span>
+                        <span class="price-value special">$${op.mayor.toLocaleString("es-CL")}</span>
+                        <span class="price-value">$${op.unitario.toLocaleString("es-CL")}</span>
+                    </div>
+                `;
+            });
             precioHtml = `
-                <div class="price-row">
-                    <span>Mayor (4+):</span>
-                    <span class="price-value special">$${minMayor.toLocaleString("es-CL")} - $${maxMayor.toLocaleString("es-CL")}</span>
-                </div>
-                <div class="price-row">
-                    <span>Unitario:</span>
-                    <span class="price-value">$${minUnitario.toLocaleString("es-CL")} - $${maxUnitario.toLocaleString("es-CL")}</span>
+                <div class="measures-list-layout">
+                    <div class="measure-price-row header-row">
+                        <span>Medida</span>
+                        <span>Mayor (4+)</span>
+                        <span>Unitario</span>
+                    </div>
+                    ${rowsHtml}
                 </div>
             `;
         } else if (p.tipo === "variantes") {
@@ -383,7 +402,7 @@ function renderCatalog() {
 function abrirImagenGrande(id) {
     if (!productos[id]) return;
     const p = productos[id];
-    cerrarPopup();
+    cerrarPopupSilencioso();
 
     const popup = document.createElement("div");
     popup.id = "popupProducto";
@@ -467,7 +486,7 @@ function abrirSelectorProducto() {
     }
 
     // Remover modal anterior si existe
-    cerrarPopup();
+    cerrarPopupSilencioso();
 
     const popup = document.createElement("div");
     popup.id = "popupProducto";
@@ -726,7 +745,7 @@ function agregarProducto() {
         cerrarPopupSilencioso();
         mostrarToast();
         setTimeout(() => {
-            const targetUrl = sessionStorage.getItem("referrerSites") || "https://sites.google.com/view/benditotaller";
+            const targetUrl = sessionStorage.getItem("referrerSites") || "https://sites.google.com/view/bendito-taller/p%C3%A1gina-principal";
             window.location.href = targetUrl;
         }, 1500);
     } else {
@@ -746,7 +765,7 @@ function cerrarPopup() {
 
     // Si viene de Google Sites y cancela, redirigir de vuelta a Google Sites
     if (sessionStorage.getItem("fromSites") === "true") {
-        const targetUrl = sessionStorage.getItem("referrerSites") || "https://sites.google.com/view/benditotaller";
+        const targetUrl = sessionStorage.getItem("referrerSites") || "https://sites.google.com/view/bendito-taller/p%C3%A1gina-principal";
         window.location.href = targetUrl;
     }
 }
